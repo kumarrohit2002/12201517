@@ -10,24 +10,21 @@ import {
   Legend,
 } from "chart.js";
 import { AiOutlineMessage, AiOutlineClose } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const UrlAnalyticsPage = () => {
+    const navigate=useNavigate();
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [urls, setUrls] = useState([]);
   const [error, setError] = useState("");
-
-  const [showChat, setShowChat] = useState(false);
-  const [messages, setMessages] = useState([
-    { sender: "bot", text: "Hi! Need help with your shortened URLs?" },
-  ]);
-  const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/shorturl/all"
+          `${backendUrl}/api/v1/shorturl/all`
         );
         setUrls(response.data.urls || response.data);
       } catch (err) {
@@ -42,17 +39,9 @@ const UrlAnalyticsPage = () => {
     fetchAnalytics();
   }, []);
 
-  const handleSend = () => {
-    if (!inputMessage.trim()) return;
-    setMessages((prev) => [
-      ...prev,
-      { sender: "user", text: inputMessage },
-      { sender: "bot", text: "I'll get back to you soon!" },
-    ]);
-    setInputMessage("");
-  };
 
-  // 📊 Chart Data Preparation
+
+  // Chart Data Preparation
   const chartData = {
     labels: urls.map((url) => url.shortcode),
     datasets: [
@@ -94,7 +83,7 @@ const UrlAnalyticsPage = () => {
           </p>
         ) : (
           <>
-            {/* 📊 Chart */}
+            {/*  Chart */}
             <div className="mb-8">
               <h2 className="text-xl font-semibold mb-2 text-center">
                 Clicks per Shortcode
@@ -102,7 +91,7 @@ const UrlAnalyticsPage = () => {
               <Bar data={chartData} options={chartOptions} />
             </div>
 
-            {/* 🔍 URL Details */}
+            {/* URL Details */}
             {urls.map((url, index) => (
               <div
                 key={index}
@@ -168,63 +157,12 @@ const UrlAnalyticsPage = () => {
           </>
         )}
       </div>
-
-      {/* 💬 Chat Button */}
       <button
-        className="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-full shadow-lg transition"
-        onClick={() => setShowChat(!showChat)}
-      >
-        {showChat ? (
-          <AiOutlineClose size={20} />
-        ) : (
-          <AiOutlineMessage size={24} />
-        )}
-      </button>
-
-      {/* 🗨️ Chat Box */}
-      {showChat && (
-        <div className="fixed bottom-20 right-6 w-80 bg-white border rounded-xl shadow-lg flex flex-col overflow-hidden">
-          <div className="bg-indigo-600 text-white p-3 font-bold">
-            Support Chat
-          </div>
-          <div className="flex-1 p-3 overflow-y-auto max-h-60 space-y-2 text-sm">
-            {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={`p-2 rounded-lg max-w-xs ${
-                  msg.sender === "user"
-                    ? "bg-indigo-100 self-end ml-auto"
-                    : "bg-gray-100 self-start mr-auto"
-                }`}
-              >
-                {msg.text}
-              </div>
-            ))}
-          </div>
-          <div className="flex border-t">
-            <input
-              type="text"
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              className="flex-1 p-2 text-sm focus:outline-none"
-              placeholder="Type your message..."
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            />
-            <button
-              onClick={handleSend}
-              className="px-4 text-indigo-600 font-semibold text-sm hover:text-indigo-800"
-            >
-              Send
-            </button>
-          </div>
-          <button
             onClick={() => navigate("/")}
             className="mb-4 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold rounded-lg transition"
           >
             Back to Home
           </button>
-        </div>
-      )}
     </div>
   );
 };

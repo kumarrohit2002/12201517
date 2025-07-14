@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const UrlShortenerPage = () => {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [formData, setFormData] = useState({
     url: '',
     shortcode: '',
@@ -28,9 +29,11 @@ const UrlShortenerPage = () => {
     setResult(null);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/shorturl', formData);
+        console.log('api called');
+      const response = await axios.post(`${backendUrl}/api/v1/shorturl`, formData);
       setResult(response.data);
     } catch (err) {
+        console.log(err);
       const message =
         err.response?.data?.error ||
         err.response?.data?.message ||
@@ -101,7 +104,7 @@ const UrlShortenerPage = () => {
 
         {result && (
           <div className="mt-6 text-sm text-gray-800">
-            <p className="font-medium">✅ Shortened URL:</p>
+            <p className="font-medium">Shortened URL:</p>
             <a
               href={result.shortLink}
               target="_blank"
@@ -110,7 +113,7 @@ const UrlShortenerPage = () => {
             >
               {result.shortLink}
             </a>
-            <p className="mt-2 text-gray-500">⏰ Expires At: {result.expiry}</p>
+            <p className="mt-2 text-gray-500"> Expires At: {result.expiry}</p>
 
            
           </div>
