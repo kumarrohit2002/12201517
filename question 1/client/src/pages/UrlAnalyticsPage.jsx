@@ -111,7 +111,7 @@ const UrlAnalyticsPage = () => {
                     rel="noreferrer"
                     className="text-indigo-600 underline break-words"
                   >
-                   `${backendUrl}/api/v1/shorturl/${url.shortcode}`
+                   `{backendUrl}/api/v1/shorturl/{url.shortcode}`
                   </a>
                 </p>
                 <p>
