@@ -106,12 +106,12 @@ const UrlAnalyticsPage = () => {
                 <p>
                   <strong>Short URL:</strong>{" "}
                   <a
-                    href={`http://localhost:3000/api/v1/shorturl/${url.shortcode}`}
+                    href={`${backendUrl}/api/v1/shorturl/${url.shortcode}`}
                     target="_blank"
                     rel="noreferrer"
                     className="text-indigo-600 underline break-words"
                   >
-                    http://localhost:3000/api/v1/shorturl/{url.shortcode}
+                   `${backendUrl}/api/v1/shorturl/${url.shortcode}`
                   </a>
                 </p>
                 <p>
